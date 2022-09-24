@@ -1,9 +1,11 @@
-import { Avatar, Table, Typography } from 'antd';
+import { Avatar, Collapse, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React from 'react';
 import { InteractionMapValue, InteractPost } from '@helpers/facebook';
 import { getFacebookAvatar } from '@helpers/image';
+import { CaretRightOutlined } from '@ant-design/icons';
 
+const { Panel } = Collapse;
 const { Text } = Typography;
 
 const columns: ColumnsType<InteractionMapValue> = [
@@ -35,18 +37,34 @@ const columns: ColumnsType<InteractionMapValue> = [
         dataIndex: 'interactIn',
         key: 'interactIn',
         render: (interactIn: InteractPost) => {
-            return interactIn.comments.map(comment => {
-                return (
-                    <a
-                        style={{
-                            display: 'block',
-                        }}
-                        href={`https://www.facebook.com/${comment}`}
+            return (
+                <Collapse
+                    bordered={false}
+                    expandIcon={({ isActive }) => (
+                        <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                    )}
+                    className="site-collapse-custom-collapse"
+                >
+                    <Panel
+                        header="View"
+                        key="1"
+                        className="site-collapse-custom-panel"
                     >
-                        {comment}
-                    </a>
-                );
-            });
+                        {interactIn.comments.map(comment => {
+                            return (
+                                <a
+                                    style={{
+                                        display: 'block',
+                                    }}
+                                    href={`https://www.facebook.com/${comment}`}
+                                >
+                                    {comment}
+                                </a>
+                            );
+                        })}
+                    </Panel>
+                </Collapse>
+            );
         },
     },
 ];

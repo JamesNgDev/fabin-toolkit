@@ -1,7 +1,15 @@
 .likedPageContainer {
- 
+
   .ant-table-pagination.ant-pagination {
     justify-content: center;
+  }
+
+  .ant-table-empty {
+    .ant-table-tbody {
+      display: flex;
+      justify-content: center !important;
+      align-content: center !important;
+    }
   }
 
   .ant-table-tbody {

@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import Facebook from '@helpers/facebook';
+import { notification } from 'antd';
 
 const facebook = new Facebook();
 facebook.init();
 const usePageLiked = (props = {}) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [pages, setPages] = useState<any[]>([]);
 
     useEffect(() => {
-        facebook.init().then(res => {
-            console.log('get user success', res);
-        });
+        facebook.init();
     }, []);
 
     const getLikedPage = useCallback(
@@ -18,10 +18,12 @@ const usePageLiked = (props = {}) => {
             facebook
                 .getLikedPage(facebookId)
                 .then(res => {
-                    console.log(res);
+                    setPages(res);
                 })
                 .catch(err => {
-                    console.log(err);
+                    notification.error({
+                        message: 'Something is wrong',
+                    });
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -33,6 +35,7 @@ const usePageLiked = (props = {}) => {
     return {
         isLoading,
         getLikedPage,
+        pages,
     };
 };
 

@@ -321,11 +321,11 @@ class Facebook {
             };
 
             const response = await this.graphQL(query);
-            const allFriends = response?.data?.data?.viewer?.all_friends;
-            if (!allFriends) {
+            const data = response?.data?.data?.node?.items;
+            if (!data) {
                 throw new Error("Can't get liked page of this user");
             }
-            const { edges = [], page_info } = allFriends;
+            const { edges = [], page_info } = data;
 
             if (!page_info?.has_next_page) {
                 break;

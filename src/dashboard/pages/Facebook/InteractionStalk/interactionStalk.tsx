@@ -17,6 +17,7 @@ import TopReactors from '@pages/Facebook/InteractionStalk/TopReactors';
 import TopCommentors from '@pages/Facebook/InteractionStalk/TopCommentors';
 import { SetPageTitle } from '@redux/actions';
 import { useDispatch } from 'react-redux';
+import LikedPageStalkTable from '@pages/Facebook/InteractionStalk/LikedPageStalkTable';
 
 const { Title } = Typography;
 
@@ -34,6 +35,8 @@ export default function InteractionStalk() {
     const {
         isLoading,
         isFetchingTargetProfile,
+        isFetchingLikedPages,
+        likedPages,
         onChangeProfile,
         stalkUser,
         dateRange,
@@ -111,6 +114,14 @@ export default function InteractionStalk() {
                         <TopCommentors
                             data={topCommentors}
                             isLoading={isLoading}
+                        />
+                    </Card>
+                </Col>
+                <Col className="gutter-row" span={24}>
+                    <Card title="Liked Page" bordered={false}>
+                        <LikedPageStalkTable
+                            pages={likedPages}
+                            isLoading={isFetchingLikedPages}
                         />
                     </Card>
                 </Col>

@@ -18,7 +18,10 @@ export default function useInteractionStalk() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFetchingTargetProfile, setIsFetchingTargetProfile] =
         useState<boolean>(false);
+    const [isFetchingLikedPages, setIsFetchingLikedPages] =
+        useState<boolean>(false);
     const [interactors, setInteractors] = useState<InteractionMapValue[]>([]);
+    const [likedPages, setLikedPages] = useState<any[]>([]);
 
     const onChangeProfile = useCallback(
         async (event: any) => {
@@ -54,8 +57,19 @@ export default function useInteractionStalk() {
             .then(interactionMap => {
                 setInteractors(Array.from(interactionMap.values()));
                 setIsLoading(false);
+                setIsFetchingLikedPages(true);
+                facebook.getLikedPage(stalkUser.uid).then(likedPages => {
+                    setLikedPages(likedPages);
+                    setIsFetchingLikedPages(false);
+                });
             });
-    }, [stalkUser, dateRange, setIsLoading, setInteractors]);
+    }, [
+        stalkUser,
+        dateRange,
+        setIsLoading,
+        setInteractors,
+        setIsFetchingLikedPages,
+    ]);
 
     const onChangeDate = useCallback(
         (value: RangePickerProps['value']) => {
@@ -93,5 +107,7 @@ export default function useInteractionStalk() {
         interactors,
         topReactors,
         topCommentors,
+        likedPages,
+        isFetchingLikedPages,
     };
 }
