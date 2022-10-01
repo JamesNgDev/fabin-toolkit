@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import { FacebookFilled, HomeOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Typography } from 'antd';
+import { Avatar, Layout, Menu, Spin, Typography } from 'antd';
 import routers from '../../routers';
 import { getFacebookAvatar } from '@helpers/image';
 import { RootState } from '@redux/reducers';
 import './defaultLayout.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { SetFacebook } from '@redux/actions';
 
 const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
@@ -17,9 +18,21 @@ const routerList = routers.map(router => {
 });
 
 const DefaultLayout: React.FC = () => {
-    const pageTitle = useSelector<RootState>(
-        state => state.app.pageTitle,
-    ) as string;
+    // @ts-ignore
+    const { loading, pageTitle, facebook } = useSelector<RootState>(
+        state => state.app,
+    );
+
+    console.log({ loading, pageTitle, facebook });
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(SetFacebook());
+    }, [dispatch]);
+
+    if (loading) {
+        return <Spin />;
+    }
 
     return (
         <Router>
@@ -80,9 +93,13 @@ const DefaultLayout: React.FC = () => {
                             <div className="profile">
                                 <Avatar
                                     size={'large'}
-                                    src={getFacebookAvatar('4')}
+                                    src={getFacebookAvatar(
+                                        facebook?.userInfo?.uid || '4',
+                                    )}
                                 />
-                                <Title level={5}></Title>
+                                <Title level={5}>
+                                    {facebook?.userInfo?.name}
+                                </Title>
                             </div>
                         </div>
                     </Header>

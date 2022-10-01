@@ -1,8 +1,16 @@
-import { AppActionType, SET_LOADING, SET_PAGE_TITLE } from '../action-types';
+import {
+    AppActionType,
+    SET_FACEBOOK,
+    SET_FACEBOOK_SUCCESS,
+    SET_LOADING,
+    SET_PAGE_TITLE,
+} from '../action-types';
+import Facebook from '@helpers/facebook';
 
 export default interface StateInfo {
     pageTitle?: string;
     loading?: boolean;
+    facebook?: typeof Facebook;
 }
 
 const initialState: StateInfo = {
@@ -24,6 +32,17 @@ export const appReducers = (
             return {
                 ...state,
                 pageTitle: action.payload,
+            };
+        case SET_FACEBOOK:
+            return {
+                ...state,
+                loading: true,
+            };
+        case SET_FACEBOOK_SUCCESS:
+            return {
+                ...state,
+                facebook: action.payload,
+                loading: false,
             };
         default:
             return state;

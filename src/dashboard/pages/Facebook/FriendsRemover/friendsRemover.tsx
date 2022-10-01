@@ -28,7 +28,6 @@ const getMutualFriend = (text: string) => {
 
 export default function FriendsRemover() {
     const talonProps = useFriendsRemover();
-
     const dispatch = useDispatch();
 
     useEffect(() => {

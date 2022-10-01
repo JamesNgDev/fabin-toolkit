@@ -17,7 +17,6 @@ import TopReactors from '@pages/Facebook/InteractionStalk/TopReactors';
 import TopCommentors from '@pages/Facebook/InteractionStalk/TopCommentors';
 import { SetPageTitle } from '@redux/actions';
 import { useDispatch } from 'react-redux';
-import LikedPageStalkTable from '@pages/Facebook/InteractionStalk/LikedPageStalkTable';
 
 const { Title } = Typography;
 
@@ -118,12 +117,7 @@ export default function InteractionStalk() {
                     </Card>
                 </Col>
                 <Col className="gutter-row" span={24}>
-                    <Card title="Liked Page" bordered={false}>
-                        <LikedPageStalkTable
-                            pages={likedPages}
-                            isLoading={isFetchingLikedPages}
-                        />
-                    </Card>
+                    <Card title="Liked Page" bordered={false}></Card>
                 </Col>
             </Row>
         </div>

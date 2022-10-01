@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Facebook, { FriendInfo } from '@helpers/facebook';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/reducers';
 
 export const useFriendsRemover = (props = {}) => {
     const [friends, setFriends] = useState<FriendInfo[]>([]);
@@ -7,10 +9,14 @@ export const useFriendsRemover = (props = {}) => {
     const [updatedAt, setUpdatedAt] = useState<number>();
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
+    // @ts-ignore
+    const facebook: Facebook = useSelector<RootState>(
+        state => state.app.facebook,
+    );
+
     const scanFriends = useCallback(
         async (isGetFromLocal: boolean) => {
             setIsLoading(true);
-            const facebook = await new Facebook().init();
             const { data, createdAt } = await facebook.getFriends(
                 isGetFromLocal,
             );
