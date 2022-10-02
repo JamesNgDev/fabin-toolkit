@@ -1,0 +1,25 @@
+.fullPageLoadingRoot {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+
+    img {
+      width: 50px;
+    }
+
+    .name {
+      font-size: 30px;
+      font-weight: bold;
+    }
+  }
+
+}

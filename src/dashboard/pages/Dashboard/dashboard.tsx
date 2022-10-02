@@ -21,28 +21,14 @@ export default function Dashboard() {
                     marginTop: 20,
                 }}
             >
-                <Col className="gutter-row" span={12}>
+                <Col className="gutter-row" span={24}>
                     <Card bordered={false} className="welcome">
                         <div className="content">
                             <div className="text">
-                                <h3>Congratulations John! 🎉</h3>
+                                <h3>Congratulations! 🎉</h3>
                                 <span>
-                                    You have done 68% 😎 more sales today. Check
-                                    your new badge in your profile.
-                                </span>
-                            </div>
-                            <img alt="Personal" src={personalImage} />
-                        </div>
-                    </Card>
-                </Col>
-                <Col className="gutter-row" span={12}>
-                    <Card bordered={false} className="welcome">
-                        <div className="content">
-                            <div className="text">
-                                <h3>Congratulations John! 🎉</h3>
-                                <span>
-                                    You have done 68% 😎 more sales today. Check
-                                    your new badge in your profile.
+                                    Lorem Ipsum is simply dummy text of the
+                                    printing and typesetting industry.
                                 </span>
                             </div>
                             <img alt="Personal" src={personalImage} />

@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import { FacebookFilled, HomeOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Spin, Typography } from 'antd';
+import { Avatar, Layout, Menu, Typography } from 'antd';
 import routers from '../../routers';
 import { getFacebookAvatar } from '@helpers/image';
 import { RootState } from '@redux/reducers';
 import './defaultLayout.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { SetFacebook } from '@redux/actions';
+import FullPageLoading from '@components/FullPageLoading';
 
 const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
@@ -31,7 +32,7 @@ const DefaultLayout: React.FC = () => {
     }, [dispatch]);
 
     if (loading) {
-        return <Spin />;
+        return <FullPageLoading />;
     }
 
     return (
@@ -59,7 +60,7 @@ const DefaultLayout: React.FC = () => {
                             <Link to="/">Dashboard</Link>
                         </Menu.Item>
                         <Menu.SubMenu
-                            title="Facebook"
+                            title="Stalk/Analytics"
                             icon={<FacebookFilled />}
                         >
                             <Menu.Item>
@@ -67,15 +68,18 @@ const DefaultLayout: React.FC = () => {
                                     Interaction Scanner
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item>
-                                <Link to="/facebook/friends-remover">
-                                    Friends Remover
-                                </Link>
-                            </Menu.Item>
 
                             <Menu.Item>
                                 <Link to="/facebook/liked-page-stalk">
                                     Liked Page Stalk
+                                </Link>
+                            </Menu.Item>
+                        </Menu.SubMenu>
+
+                        <Menu.SubMenu title="Friends" icon={<FacebookFilled />}>
+                            <Menu.Item>
+                                <Link to="/facebook/friends-remover">
+                                    Friends Remover
                                 </Link>
                             </Menu.Item>
                         </Menu.SubMenu>
@@ -97,9 +101,7 @@ const DefaultLayout: React.FC = () => {
                                         facebook?.userInfo?.uid || '4',
                                     )}
                                 />
-                                <Title level={5}>
-                                    {facebook?.userInfo?.name}
-                                </Title>
+                                <p>{facebook?.userInfo?.name}</p>
                             </div>
                         </div>
                     </Header>

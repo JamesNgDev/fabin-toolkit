@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Avatar,
+    Button,
     Card,
     Col,
-    Divider,
     Input,
+    Progress,
     Row,
     Table,
     Typography,
@@ -16,12 +17,16 @@ import { useDispatch } from 'react-redux';
 import { SetPageTitle } from '@redux/actions';
 
 import './likedPageStalk.scss';
+import FacebookURLInput from '@components/SelectFriendInput/selectFriendInput';
+import { getFacebookAvatar } from '@helpers/image';
+import { FacebookUserInfo } from '@helpers/facebook';
 
 const { Text } = Typography;
 
 const LikedPageStalk: React.FC = () => {
     const talonProps = usePageLiked();
-    const { isLoading, getLikedPage, pages } = talonProps;
+    const { isLoading, pages, getLikedPage, percent } = talonProps;
+    const [facebookInfo, setFacebookInfo] = useState<FacebookUserInfo>();
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -82,21 +87,50 @@ const LikedPageStalk: React.FC = () => {
                     <Card bordered={false}>
                         <div className="friends-remover">
                             <div className="top">
-                                <div className="left">
-                                    <Input.Search
-                                        placeholder="Facebook ID"
-                                        enterButton="Search"
-                                        size="large"
-                                        onSearch={getLikedPage}
-                                        loading={isLoading}
+                                <div
+                                    className="left d-flex"
+                                    style={{
+                                        width: '50%',
+                                    }}
+                                >
+                                    <FacebookURLInput
+                                        onChange={userInfo => {
+                                            setFacebookInfo(userInfo);
+                                        }}
                                     />
+                                    <Button
+                                        className="mx-2"
+                                        type="primary"
+                                        icon={<SearchOutlined />}
+                                        disabled={!facebookInfo?.uid}
+                                        onClick={() => {
+                                            getLikedPage(facebookInfo?.uid);
+                                        }}
+                                    >
+                                        Scan
+                                    </Button>
                                 </div>
                                 <div className="right">
-                                    <Text>Total: {pages?.length || 0}</Text>
+                                    {facebookInfo?.uid ? (
+                                        <div className="profile">
+                                            <Avatar
+                                                size={'large'}
+                                                src={getFacebookAvatar(
+                                                    facebookInfo?.uid || '4',
+                                                )}
+                                            />
+                                            <span>{facebookInfo?.name}</span>
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
 
-                            <Divider />
+                            {isLoading && (
+                                <Progress
+                                    percent={Math.round(percent)}
+                                    status="active"
+                                />
+                            )}
 
                             <Table
                                 columns={tableColumns}

@@ -8,6 +8,7 @@ export const useFriendsRemover = (props = {}) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [updatedAt, setUpdatedAt] = useState<number>();
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [removedUsers, setRemovedUsers] = useState<FriendInfo[]>([]);
 
     // @ts-ignore
     const facebook: Facebook = useSelector<RootState>(
@@ -44,19 +45,30 @@ export const useFriendsRemover = (props = {}) => {
         onChange: onSelectChange,
     };
 
-    const handleRemove = useCallback(() => {
-        console.log('handle remove');
-    }, []);
-
     const readyToRemoveFriends = useMemo(() => {
         return friends.filter(friend => selectedRowKeys.includes(friend.id));
-    }, [friends]);
+    }, [friends, selectedRowKeys]);
+
+    const handleRemove = useCallback(async () => {
+        for (const friend of friends) {
+            if (selectedRowKeys.includes(friend.id)) {
+                await new Promise(resolve => {
+                    setTimeout(resolve, 500);
+                });
+                setFriends(_friends => {
+                    return _friends.filter(fr => friend.id !== fr.id);
+                });
+                setRemovedUsers(prev => [friend, ...prev]);
+            }
+        }
+    }, [readyToRemoveFriends, setRemovedUsers, friends, selectedRowKeys]);
 
     return {
         isLoading,
         friends,
         updatedAt,
         rowSelection,
+        removedUsers,
         handleScanFriends,
         handleRemove,
         readyToRemoveFriends,

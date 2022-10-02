@@ -301,7 +301,10 @@ class Facebook {
         return interactionMap;
     }
 
-    async getLikedPage(targetId: string) {
+    async getLikedPage(
+        targetId: string,
+        callbackPercent?: (percent: number) => void,
+    ) {
         let result: LikedPageNode[] = [];
         const { uid, fb_dtsg } = this.userInfo;
         let cursor = '';
@@ -325,19 +328,23 @@ class Facebook {
             if (!data) {
                 throw new Error("Can't get liked page of this user");
             }
-            const { edges = [], page_info } = data;
+            const { edges = [], page_info, count = 0 } = data;
 
             if (!page_info?.has_next_page) {
                 break;
             } else {
                 cursor = page_info.end_cursor;
-                await sleep(2 * 1000);
+                // await sleep(2 * 1000);
             }
 
             for (const edge of edges) {
                 if (edge?.node) {
                     result.push(edge.node);
                 }
+            }
+            if (typeof callbackPercent === 'function') {
+                const percent = ((result.length || 0) / count) * 100;
+                callbackPercent(percent);
             }
         }
 

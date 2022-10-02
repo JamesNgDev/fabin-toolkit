@@ -1,38 +1,47 @@
-import React from 'react';
-import { Select } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Input, message } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import Facebook, { FacebookUserInfo } from '@helpers/facebook';
 
-const { Option } = Select;
+const facebook = new Facebook();
 
-const SelectFriendInput = (props: {}) => {
+export interface IFacebookURLInput {
+    onChange: (info: FacebookUserInfo) => void;
+}
+
+const FacebookURLInput = (props: IFacebookURLInput) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const onChangeProfile = useCallback(
+        async (url: string) => {
+            setIsLoading(true);
+            facebook
+                .getUserInfoByUrl(url)
+                .then(facebookInfo => {
+                    if (typeof props?.onChange === 'function') {
+                        props.onChange(facebookInfo);
+                    }
+                })
+                .catch(() => {
+                    message.warn("Can't get Facebook ID");
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        },
+        [facebook, setIsLoading, props],
+    );
+
     return (
-        <div>
-            <Select
-                showSearch
-                style={{ width: 200 }}
-                placeholder="Search to Select"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                    (option!.children as unknown as string).includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                    (optionA!.children as unknown as string)
-                        .toLowerCase()
-                        .localeCompare(
-                            (
-                                optionB!.children as unknown as string
-                            ).toLowerCase(),
-                        )
-                }
-            >
-                <Option value="1">Not Identified</Option>
-                <Option value="2">Closed</Option>
-                <Option value="3">Communicated</Option>
-                <Option value="4">Identified</Option>
-                <Option value="5">Resolved</Option>
-                <Option value="6">Cancelled</Option>
-            </Select>
+        <div className="item">
+            <Input
+                placeholder="Facebook Profile URL"
+                prefix={<UserOutlined />}
+                onChange={e => onChangeProfile(e?.target?.value)}
+                allowClear
+                disabled={isLoading}
+            />
         </div>
     );
 };
 
-export default SelectFriendInput;
+export default FacebookURLInput;

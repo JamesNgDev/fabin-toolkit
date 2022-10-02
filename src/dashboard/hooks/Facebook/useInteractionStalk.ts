@@ -6,8 +6,8 @@ import { useCallback, useMemo, useState } from 'react';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import moment from 'moment';
 import { message } from 'antd';
-
-const facebook = new Facebook();
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/reducers';
 
 export default function useInteractionStalk() {
     const [stalkUser, setStalkUser] = useState<FacebookUserInfo>();
@@ -18,10 +18,12 @@ export default function useInteractionStalk() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFetchingTargetProfile, setIsFetchingTargetProfile] =
         useState<boolean>(false);
-    const [isFetchingLikedPages, setIsFetchingLikedPages] =
-        useState<boolean>(false);
     const [interactors, setInteractors] = useState<InteractionMapValue[]>([]);
-    const [likedPages, setLikedPages] = useState<any[]>([]);
+
+    // @ts-ignore
+    const facebook: Facebook = useSelector<RootState>(
+        state => state.app.facebook,
+    );
 
     const onChangeProfile = useCallback(
         async (event: any) => {
@@ -45,31 +47,24 @@ export default function useInteractionStalk() {
 
     const onStartStalk = useCallback(async () => {
         setIsLoading(true);
-        await facebook.init();
         const [startDate, endDate] = dateRange;
 
-        facebook
-            .getInteractions(
+        setInteractors([]);
+
+        try {
+            const interactionMap = await facebook.getInteractions(
                 stalkUser.uid,
                 startDate.toDate().getTime(),
                 endDate.toDate().getTime(),
-            )
-            .then(interactionMap => {
-                setInteractors(Array.from(interactionMap.values()));
-                setIsLoading(false);
-                setIsFetchingLikedPages(true);
-                facebook.getLikedPage(stalkUser.uid).then(likedPages => {
-                    setLikedPages(likedPages);
-                    setIsFetchingLikedPages(false);
-                });
-            });
-    }, [
-        stalkUser,
-        dateRange,
-        setIsLoading,
-        setInteractors,
-        setIsFetchingLikedPages,
-    ]);
+            );
+
+            setInteractors(Array.from(interactionMap.values()));
+            setIsLoading(false);
+        } catch (e) {
+            message.warn('Sorry ! Get trouble when get data. Please try again');
+            setIsLoading(false);
+        }
+    }, [stalkUser, dateRange, setIsLoading, setInteractors]);
 
     const onChangeDate = useCallback(
         (value: RangePickerProps['value']) => {
@@ -107,7 +102,5 @@ export default function useInteractionStalk() {
         interactors,
         topReactors,
         topCommentors,
-        likedPages,
-        isFetchingLikedPages,
     };
 }

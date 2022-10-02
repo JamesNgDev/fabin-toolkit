@@ -34,8 +34,6 @@ export default function InteractionStalk() {
     const {
         isLoading,
         isFetchingTargetProfile,
-        isFetchingLikedPages,
-        likedPages,
         onChangeProfile,
         stalkUser,
         dateRange,
@@ -45,6 +43,7 @@ export default function InteractionStalk() {
         topCommentors,
     } = talonProps;
 
+    // @ts-ignore
     return (
         <div className="page interaction-stalk">
             <Row
@@ -115,9 +114,6 @@ export default function InteractionStalk() {
                             isLoading={isLoading}
                         />
                     </Card>
-                </Col>
-                <Col className="gutter-row" span={24}>
-                    <Card title="Liked Page" bordered={false}></Card>
                 </Col>
             </Row>
         </div>

@@ -40,8 +40,21 @@ export default function FriendsRemover() {
         updatedAt,
         handleScanFriends,
         rowSelection,
+        removedUsers,
         handleRemove,
     } = talonProps;
+
+    const maybeRemovedUsers = useMemo(() => {
+        return removedUsers.map(user => {
+            return (
+                <li>
+                    <Text key={user.id} type="success">
+                        ✅ Removed {user.name}
+                    </Text>
+                </li>
+            );
+        });
+    }, [removedUsers]);
 
     const columns: ColumnsType<FriendInfo> = [
         {
@@ -163,6 +176,16 @@ export default function FriendsRemover() {
                                 type="info"
                                 showIcon
                             />
+
+                            <div
+                                className={'mt-2'}
+                                style={{
+                                    overflow: 'scroll',
+                                    maxHeight: '200px',
+                                }}
+                            >
+                                {maybeRemovedUsers}
+                            </div>
 
                             <div className="top">
                                 <div className="left">
