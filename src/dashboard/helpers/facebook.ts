@@ -48,6 +48,10 @@ export interface FriendInfo {
 export interface NodeInfo {
     id: string;
     name: string;
+    profile_picture?: {
+        uri: string;
+    };
+    url?: string;
 }
 
 export interface InteractCount {
@@ -69,6 +73,19 @@ export interface InteractionMapValue {
     info: NodeInfo;
     interaction: InteractCount;
     interactIn: InteractPost;
+}
+
+export interface FriendRequest {
+    friendship_status: string;
+    id: string;
+    name: string;
+    profile_picture?: {
+        uri?: string;
+    };
+    social_context: {
+        text?: string;
+    };
+    social_context_top_mutual_friends?: NodeInfo;
 }
 
 class Facebook {
@@ -414,6 +431,81 @@ class Facebook {
             data: this.friends,
             createdAt: new Date().getTime(),
         };
+    }
+
+    async getFriendRequests(): Promise<FriendRequest[]> {
+        let result: FriendRequest[] = [];
+        let cursor = '';
+        const { uid, fb_dtsg } = this.userInfo;
+
+        while (true) {
+            const query = {
+                av: uid,
+                __user: uid,
+                fb_dtsg,
+                fb_api_caller_class: 'RelayModern',
+                fb_api_req_friendly_name:
+                    'FriendingCometFriendRequestsGridPaginationQuery',
+                variables: `{"count":20,"cursor":"${cursor}","scale":2}`,
+                server_timestamps: true,
+                doc_id: '5073444706045886',
+            };
+            const response = await this.graphQL(query);
+            const friendRequests =
+                response?.data?.data?.viewer?.friend_requests;
+            const { edges = [], page_info } = friendRequests;
+            for (const edge of edges) {
+                if (edge?.node) {
+                    result.push(edge.node);
+                }
+            }
+            if (!page_info?.has_next_page) {
+                break;
+            } else {
+                cursor = page_info.end_cursor;
+            }
+        }
+        return result;
+    }
+
+    async getSentRequests() {
+        let result: FriendRequest[] = [];
+        let cursor = '';
+        const { uid, fb_dtsg } = this.userInfo;
+
+        while (true) {
+            const query = {
+                av: uid,
+                __user: uid,
+                fb_dtsg,
+                fb_api_caller_class: 'RelayModern',
+                fb_api_req_friendly_name:
+                    'FriendingCometOutgoingRequestsDialogQuery',
+                variables: `{"count":20,"cursor":"${cursor}","scale":2}`,
+                server_timestamps: true,
+                doc_id: '7114490868621087',
+            };
+            const response = await this.graphQL(query);
+            const {
+                outgoing_friend_requests_connection,
+                outgoing_friend_requests,
+            } = response?.data?.data?.viewer;
+            const { edges = [], page_info } =
+                outgoing_friend_requests_connection;
+            const { count } = outgoing_friend_requests;
+
+            for (const edge of edges) {
+                if (edge?.node) {
+                    result.push(edge.node);
+                }
+            }
+            if (!page_info?.has_next_page || result?.length >= count) {
+                break;
+            } else {
+                cursor = page_info.end_cursor;
+            }
+        }
+        return result;
     }
 }
 

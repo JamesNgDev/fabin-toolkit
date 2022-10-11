@@ -24,8 +24,6 @@ const DefaultLayout: React.FC = () => {
         state => state.app,
     );
 
-    console.log({ loading, pageTitle, facebook });
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(SetFacebook());
@@ -65,7 +63,7 @@ const DefaultLayout: React.FC = () => {
                         >
                             <Menu.Item>
                                 <Link to="/facebook/interaction-scan">
-                                    Interaction Scanner
+                                    Interaction Stalk
                                 </Link>
                             </Menu.Item>
 
@@ -80,6 +78,11 @@ const DefaultLayout: React.FC = () => {
                             <Menu.Item>
                                 <Link to="/facebook/friends-remover">
                                     Friends Remover
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item>
+                                <Link to="/facebook/friend-request">
+                                    Friend request
                                 </Link>
                             </Menu.Item>
                         </Menu.SubMenu>

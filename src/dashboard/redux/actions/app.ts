@@ -21,7 +21,9 @@ export const SetFacebook = (): AppActionType => ({
     type: SET_FACEBOOK,
 });
 
-export const SetFacebookSuccess = (payload: Facebook): AppActionType => ({
+export const SetFacebookSuccess = (
+    payload: typeof Facebook,
+): AppActionType => ({
     type: SET_FACEBOOK_SUCCESS,
     payload,
 });

@@ -2,6 +2,7 @@ import Dashboard from '@pages/Dashboard';
 import InteractionStalk from '@pages/Facebook/InteractionStalk';
 import FriendsRemover from '@pages/Facebook/FriendsRemover';
 import LikedPageStalk from '@pages/Facebook/LikedPageStalk';
+import FriendRequest from '@pages/Facebook/FriendRequest';
 
 const routers = [
     {
@@ -20,6 +21,10 @@ const routers = [
     {
         path: '/facebook/liked-page-stalk',
         Component: LikedPageStalk,
+    },
+    {
+        path: '/facebook/friend-request',
+        Component: FriendRequest,
     },
 ];
 
