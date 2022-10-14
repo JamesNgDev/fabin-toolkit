@@ -507,6 +507,47 @@ class Facebook {
         }
         return result;
     }
+
+    processFriendRequest(targetId: string, action: 'confirm' | 'delete') {
+        const { uid, fb_dtsg } = this.userInfo;
+        const mutationName =
+            action === 'confirm'
+                ? 'FriendingCometFriendRequestConfirmMutation'
+                : 'FriendingCometFriendRequestDeleteMutation';
+        const deleteVariables = `{"input":{"friend_requester_id":"${targetId}","source":"friends_tab","actor_id":"${uid}","client_mutation_id":"5"},"scale":2,"refresh_num":0}`;
+        const confirmVairables = `{"input":{"attribution_id_v2":"FriendingCometRoot.react,comet.friending,tap_bookmark,1665735258869,351351,2356318349,","friend_requester_id":"${targetId}","source":"friends_tab","actor_id":"${uid}","client_mutation_id":"4"},"scale":2,"refresh_num":0}`;
+
+        const data = {
+            av: uid,
+            __user: uid,
+            fb_dtsg,
+            fb_api_caller_class: 'RelayModern',
+            fb_api_req_friendly_name: mutationName,
+            server_timestamps: true,
+            variables:
+                action === 'confirm' ? confirmVairables : deleteVariables,
+            doc_id: action === 'confirm' ? 6183939714956490 : 5211510105641511,
+            fb_api_analytics_tags: ['qpl_active_flow_ids=30605361'],
+        };
+
+        return this.graphQL(data);
+    }
+
+    unfriend(targetId: string) {
+        const { uid, fb_dtsg } = this.userInfo;
+
+        const data = {
+            av: uid,
+            __user: uid,
+            fb_dtsg,
+            fb_api_caller_class: 'RelayModern',
+            fb_api_req_friendly_name: 'FriendingCometUnfriendMutation',
+            server_timestamps: true,
+            variables: `{"input":{"source":"bd_profile_button","unfriended_user_id":"${targetId}","actor_id":"${uid}","client_mutation_id":"1"},"scale":2}`,
+            doc_id: 5400234993334462,
+        };
+        return this.graphQL(data);
+    }
 }
 
 export default Facebook;

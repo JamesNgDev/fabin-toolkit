@@ -50,17 +50,20 @@ export const useFriendsRemover = (props = {}) => {
     }, [friends, selectedRowKeys]);
 
     const handleRemove = useCallback(async () => {
+        setIsLoading(true);
         for (const friend of friends) {
             if (selectedRowKeys.includes(friend.id)) {
                 await new Promise(resolve => {
                     setTimeout(resolve, 500);
                 });
+                await facebook.unfriend(friend.id);
                 setFriends(_friends => {
                     return _friends.filter(fr => friend.id !== fr.id);
                 });
                 setRemovedUsers(prev => [friend, ...prev]);
             }
         }
+        setIsLoading(false);
     }, [readyToRemoveFriends, setRemovedUsers, friends, selectedRowKeys]);
 
     return {

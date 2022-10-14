@@ -200,6 +200,7 @@ export default function FriendsRemover() {
                                     <Button
                                         type="primary"
                                         onClick={handleScanFriends}
+                                        disabled={isLoading}
                                     >
                                         Scan again
                                     </Button>
@@ -207,6 +208,7 @@ export default function FriendsRemover() {
                                         type="primary"
                                         danger
                                         onClick={handleRemove}
+                                        disabled={isLoading}
                                     >
                                         Bye bye 👋
                                     </Button>

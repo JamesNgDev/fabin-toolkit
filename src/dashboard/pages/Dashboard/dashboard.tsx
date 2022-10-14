@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
-import { Card, Col, Row, Switch } from 'antd';
+import { Button, Card, Col, Row } from 'antd';
 import './dashboard.scss';
 // @ts-ignore
 import personalImage from './../../assets/images/person-dashboard.png';
-import { Typography } from 'antd/es';
 import { SetPageTitle } from '@redux/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@redux/reducers';
 
 export default function Dashboard() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(SetPageTitle('Dashboard'));
     }, []);
+
+    const facebook = useSelector<RootState>(state => state.app.facebook);
 
     return (
         <div className="dashboard">
@@ -25,170 +27,44 @@ export default function Dashboard() {
                     <Card bordered={false} className="welcome">
                         <div className="content">
                             <div className="text">
-                                <h3>Congratulations! 🎉</h3>
+                                <h3>Hi, {facebook?.userInfo?.name} 🎉</h3>
                                 <span>
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry.
+                                    Thanks for using <b>Fabin Toolkit</b>.{' '}
+                                    <b>Fabin Toolkit</b> combines many tools
+                                    help you using Facebook easily and always
+                                    FREE for use.
                                 </span>
+                                <div
+                                    className="mt-4 d-inline-flex"
+                                    style={{
+                                        gap: 10,
+                                    }}
+                                >
+                                    <Button type="primary">Contribute</Button>
+                                    <Button type="ghost">Donate</Button>
+                                </div>
+
+                                <div className="mt-4">
+                                    <p className="text-danger">
+                                        WARNING: Your account may get locked
+                                        temporarily (checkpointed by Facebook)
+                                        for using my extension.
+                                    </p>
+                                </div>
                             </div>
                             <img alt="Personal" src={personalImage} />
                         </div>
                     </Card>
                 </Col>
-
-                <Col
-                    className="gutter-row"
-                    span={8}
-                    style={{
-                        marginTop: 20,
-                    }}
-                >
-                    <Card bordered={false} title="Facebook">
-                        <div className="toolOptions">
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Seen' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Comment
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'seen' story
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block Facebook Pixel (Tracking Script)
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Remove Fbclid Parameter From Links
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                        </div>
-                    </Card>
-                </Col>
-
-                <Col
-                    className="gutter-row"
-                    span={8}
-                    style={{
-                        marginTop: 20,
-                    }}
-                >
-                    <Card bordered={false} title="Instagram">
-                        <div className="toolOptions">
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Seen' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Comment
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'seen' story
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block Facebook Pixel (Tracking Script)
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Remove Fbclid Parameter From Links
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                        </div>
-                    </Card>
-                </Col>
-
-                <Col
-                    className="gutter-row"
-                    span={8}
-                    style={{
-                        marginTop: 20,
-                    }}
-                >
-                    <Card bordered={false} title="Security">
-                        <div className="toolOptions">
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Seen' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Messenger
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'Typing' Comment
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block 'seen' story
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-
-                            <div className="item">
-                                <Typography.Text>
-                                    Block Facebook Pixel (Tracking Script)
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                            <div className="item">
-                                <Typography.Text>
-                                    Remove Fbclid Parameter From Links
-                                </Typography.Text>
-                                <Switch defaultChecked />
-                            </div>
-                        </div>
+                <Col className="gutter-row" span={24} style={{ marginTop: 20 }}>
+                    <Card bordered={false} title="Update history">
+                        <p>
+                            💥<b>14/10/2022: </b>{' '}
+                            <i>
+                                Interaction Stalk, Liked Page Stalk, Friend
+                                Remove, Friend Request
+                            </i>
+                        </p>
                     </Card>
                 </Col>
             </Row>

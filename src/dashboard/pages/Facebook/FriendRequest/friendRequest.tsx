@@ -14,11 +14,17 @@ const { Text } = Typography;
 function FriendRequest(props: any) {
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(SetPageTitle('Friend reqest'));
+        dispatch(SetPageTitle('Friend request'));
     }, []);
 
     const talonProps = useFriendRequest();
-    const { handleScanFriendRequest, friendRequests, isLoading } = talonProps;
+    const {
+        handleScanFriendRequest,
+        handleProcess,
+        friendRequests,
+        rowSelection,
+        isLoading,
+    } = talonProps;
 
     const columns: ColumnsType<FriendRequest> = [
         {
@@ -47,7 +53,7 @@ function FriendRequest(props: any) {
                 <div className="profile">
                     <Avatar src={row?.profile_picture?.uri} />
                     <Text>
-                        <a href={row.url} target="_blank">
+                        <a href={`https://fb.com/${row.id}`} target="_blank">
                             {text}
                         </a>
                     </Text>
@@ -68,6 +74,8 @@ function FriendRequest(props: any) {
             },
         },
     ];
+
+    const hasSelectRow = rowSelection?.selectedRowKeys?.length > 0;
 
     return (
         <div className="page friend-request">
@@ -90,11 +98,39 @@ function FriendRequest(props: any) {
                                     Scan friend request
                                 </Button>
                             </div>
-                            <div className="right">
-                                <Button type="default">
-                                    Scan Friend Request
-                                </Button>
-                                <Button type="default">Delete</Button>
+                            <div
+                                className="friend-request-actions"
+                                style={{
+                                    display: hasSelectRow ? 'flex' : 'none',
+                                }}
+                            >
+                                <Text strong>
+                                    You selected{' '}
+                                    {rowSelection?.selectedRowKeys?.length || 0}{' '}
+                                    friends
+                                </Text>
+                                <div>
+                                    <Button
+                                        type="primary"
+                                        onClick={() => {
+                                            handleProcess('confirm');
+                                        }}
+                                        disabled={isLoading}
+                                    >
+                                        Accept
+                                    </Button>
+                                    <Button
+                                        className="ml-2"
+                                        type="primary"
+                                        danger
+                                        onClick={() => {
+                                            handleProcess('delete');
+                                        }}
+                                        disabled={isLoading}
+                                    >
+                                        Decline
+                                    </Button>
+                                </div>
                             </div>
                         </div>
 
@@ -103,6 +139,7 @@ function FriendRequest(props: any) {
                             dataSource={friendRequests}
                             rowKey="id"
                             loading={isLoading}
+                            rowSelection={rowSelection}
                         />
                     </Card>
                 </Col>
